@@ -19,11 +19,12 @@ function App() {
 
 
   useEffect(() => {
-    axios.get("https://tricky-pantyhose-slug.cyclic.app/products"
+    axios.get("https://gorgeous-plum-underwear.cyclic.app/products"
     )
       .then(function (response) {
         console.log(response.data.data);
-        setproducts(response.data.data)
+        setproducts(response.data.data);
+        
       })
       .catch(function (error) {
         console.log(error);
