@@ -19,16 +19,31 @@ function App() {
 
 
   useEffect(() => {
-    axios.get("https://smiling-sock-bat.cyclic.app/products"
-    )
+
+
+
+
+
+
+    axios({
+      url: 'https://eager-moccasins-hen.cyclic.app/products',
+      method: "get",
+      withCredentials: true
+    })
       .then(function (response) {
+        // handle success
         console.log(response.data.data);
-        setproducts(response.data.data);
-        
+        setproducts(response.data.data)
+
       })
       .catch(function (error) {
+        // handle error
         console.log(error);
       })
+      .then(function () {
+        // always executed
+      });
+
 
   }, [toggle])
 
@@ -58,7 +73,7 @@ function App() {
     
     axios({
       method: 'post',
-      url : "https://tricky-pantyhose-slug.cyclic.app/product",
+      url : "https://smiling-sock-bat.cyclic.app/product",
     //  url: "http://localhost:5000/product",
       data: formData,
       headers: { 'Content-Type': 'multipart/form-data' },
@@ -77,7 +92,7 @@ function App() {
 
   }
   const updateProduct = () => {
-    axios.put(`https://tricky-pantyhose-slug.cyclic.app/product/${editproduct._id}`, {
+    axios.put(`https://smiling-sock-bat.cyclic.app/product/${editproduct._id}`, {
       name: editproduct.name,
       description: editproduct.description,
       price: editproduct.price,
@@ -166,7 +181,7 @@ function App() {
             <div>{eachProduct?.price}</div>
             <div>{eachProduct?.code}</div>
             <button onClick={() => {
-              axios.delete(`https://tricky-pantyhose-slug.cyclic.app/product/${eachProduct._id}`)
+              axios.delete(`https://smiling-sock-bat.cyclic.app/product/${eachProduct._id}`)
                 .then(function (response) {
                   console.log(response, "deleted");
                   setToggle(!toggle)
