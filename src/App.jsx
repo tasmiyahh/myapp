@@ -92,7 +92,7 @@ function App() {
 
   }
   const updateProduct = () => {
-    axios.put(`https://smiling-sock-bat.cyclic.app/product/${editproduct._id}`, {
+    axios.put(`https://smiling-sock-bat.cyclic.app/product/${editproduct._id}`, {withCredentials: true},{
       name: editproduct.name,
       description: editproduct.description,
       price: editproduct.price,
@@ -181,7 +181,7 @@ function App() {
             <div>{eachProduct?.price}</div>
             <div>{eachProduct?.code}</div>
             <button onClick={() => {
-              axios.delete(`https://smiling-sock-bat.cyclic.app/product/${eachProduct._id}`)
+              axios.delete(`https://smiling-sock-bat.cyclic.app/product/${eachProduct._id}` , {withCredentials: true})
                 .then(function (response) {
                   console.log(response, "deleted");
                   setToggle(!toggle)
