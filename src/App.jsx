@@ -19,7 +19,7 @@ function App() {
 
 
   useEffect(() => {
-    axios.get("https://gorgeous-plum-underwear.cyclic.app/products"
+    axios.get("https://smiling-sock-bat.cyclic.app/products"
     )
       .then(function (response) {
         console.log(response.data.data);
