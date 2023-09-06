@@ -3,6 +3,10 @@ import Navbar from './compnents/navbar';
 import './App.css';
 import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios'
+import Home from './compnents/home';
+
+
+
 
 
 
@@ -10,13 +14,15 @@ import axios from 'axios'
 function App() {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
-  const [price, setPrice] = useState("")
+  const [price, setPrice] = useState()
   const [code, setCode] = useState("")
   const [products, setproducts] = useState([])
   const [toggle, setToggle] = useState(false)
   const [editproduct, setEditproduct] = useState(null)
+  const [img , setimg] = useState()
 
-
+  
+  
 
   useEffect(() => {
 
@@ -26,7 +32,7 @@ function App() {
 
 
     axios({
-      url: 'https://eager-moccasins-hen.cyclic.app/products',
+      url: 'http://localhost:5000/products',
       method: "get",
       withCredentials: true
     })
@@ -64,7 +70,9 @@ function App() {
 
     formData.append("name", name); // this is how you add some text data along with file
     formData.append("description", description); // this is how you add some text data along with file
-    formData.append("price", price); // this is how you add some text data along with file
+    formData.append("price", price); 
+    // this is how you add some text data along with file
+    formData.append("code", code);
     formData.append("productimage", productimage.files[0]); // file input is for browser only, use fs to read file in nodejs client
 
 
@@ -73,8 +81,8 @@ function App() {
     
     axios({
       method: 'post',
-      url : "https://smiling-sock-bat.cyclic.app/product",
-    //  url: "http://localhost:5000/product",
+    //  url : "https://smiling-sock-bat.cyclic.app/product",
+     url: "http://localhost:5000/product",
       data: formData,
       headers: { 'Content-Type': 'multipart/form-data' },
        withCredentials: true
@@ -91,24 +99,48 @@ function App() {
 
 
   }
-  const updateProduct = () => {
-    axios.put(`https://smiling-sock-bat.cyclic.app/product/${editproduct._id}`, {withCredentials: true},{
-      name: editproduct.name,
-      description: editproduct.description,
-      price: editproduct.price,
-      code: editproduct.code
-    })
+ 
+
+  let updateProduct = (e) => {
+    e.preventDefault();
+
+
+
+
+    // axios.put(`http://localhost:5000/product/${editProduct?._id}`,
+    // 
+    axios.put(`http://localhost:5000/product/${editproduct?._id}`,
+      {
+        name: editproduct.name,
+        price: editproduct.price,
+        description: editproduct.description,
+        code: editproduct.code,
+      }
+    )
       .then(function (response) {
-        console.log("edited" + response);
+        console.log("updated: ", response.data);
+
+        setToggle(!toggle);
+        setEditproduct(null);
+
       })
-      .catch(function (error) {
-        console.log(error);
-      });
+
+
+      .catch(function (e) {
+        console.log("Error in api call: ", e);
+
+      }
+      )
   }
+
   return (
 
     <div>
   <Navbar/>
+ 
+  
+  
+   
   
 
       <form action="" onSubmit={onsubmit}>
@@ -116,7 +148,7 @@ function App() {
           onChange={(e) => {
             setName(e.target.value)
           }} />
-        description : <input type="text"
+        description : <input type="text" 
           onChange={(e) => {
             setDescription(e.target.value)
           }} />
@@ -128,12 +160,13 @@ function App() {
           onChange={(e) => {
             setCode(e.target.value)
           }} />
-          productimage: <input type="file" id="productimage" accept='image/*'
-            onChange={() => {
+          productimage: <input type="file"  id="productimage" multiple
+            onChange={(e) => {
               ////// to display imager instantly on screen
               var productimage = document.getElementById("productimage");
               var url = URL.createObjectURL(productimage.files[0])
               console.log("url: ", url);
+             
               document.getElementById("img").innerHTML = `<img width="300px" height="300px" src="${url}" alt="" id="img"> `
             }} />
 
@@ -141,7 +174,7 @@ function App() {
         <button>done</button>
       </form>
 
-      {
+      {/* {
         (editproduct === null) ? null : (
           <div>
             <form action="" onSubmit={updateProduct}>
@@ -165,7 +198,31 @@ function App() {
             </form>
           </div>
         )
-      }
+      } */}
+       {(editproduct !== null) ?
+          (<div>
+            <form onSubmit={updateProduct}>
+            <h1>EDIT FORM</h1>
+              name : <input type="text" onChange={(e) => {
+                setEditproduct({ ...editproduct, name: e.target.value })
+              }} value={editproduct?.name} /> <br />
+
+              description : <input type="text" onChange={(e) => {
+                setEditproduct({ ...editproduct, description: e.target.value })
+              }} value={editproduct?.description} /> <br />
+
+              price : <input type="number" onChange={(e) => {
+                setEditproduct({ ...editproduct, price: e.target.value })
+              }} value={editproduct?.price} /> <br />
+                code : <input type="text"
+                onChange={(e) => {
+                  setEditproduct({ ...editproduct, code: e.target.value })
+                }} />
+
+              <button>edit product</button>
+            </form>
+          </div>) : null
+        }
 
 
 
@@ -180,8 +237,19 @@ function App() {
             <div>{eachProduct?.description}</div>
             <div>{eachProduct?.price}</div>
             <div>{eachProduct?.code}</div>
+            <button onClick={()=>{
+                axios.get(`http://localhost:5000/product/${eachProduct._id}` , {withCredentials: true})
+                .then(function (response) {
+                  console.log(response, "found");
+                  setToggle(!toggle)
+
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+            }}>view</button>
             <button onClick={() => {
-              axios.delete(`https://smiling-sock-bat.cyclic.app/product/${eachProduct._id}` , {withCredentials: true})
+              axios.delete(`http://localhost:5000/product/${eachProduct._id}` , {withCredentials: true})
                 .then(function (response) {
                   console.log(response, "deleted");
                   setToggle(!toggle)
