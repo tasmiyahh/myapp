@@ -14,7 +14,7 @@ import Home from './compnents/home';
 function App() {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
-  const [price, setPrice] = useState()
+  const [price, setPrice] = useState("")
   const [code, setCode] = useState("")
   const [products, setproducts] = useState([])
   const [toggle, setToggle] = useState(false)
