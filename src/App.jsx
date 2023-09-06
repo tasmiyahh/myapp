@@ -19,7 +19,7 @@ function App() {
   const [products, setproducts] = useState([])
   const [toggle, setToggle] = useState(false)
   const [editproduct, setEditproduct] = useState(null)
-  const [img , setimg] = useState()
+ 
 
   
   
